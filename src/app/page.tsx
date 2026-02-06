@@ -193,7 +193,7 @@ export default function Page() {
       <section>
         <div className="relative w-full min-h-[90vh] bg-zinc-100">
           {/* Content */}
-          <div className="relative mx-auto max-w-6xl px-6 min-h-[90vh] flex flex-col items-center justify-center pb-40">
+          <div className="relative mx-auto max-w-6xl px-6 min-h-[90vh] flex flex-col items-center justify-center sm:pb-40">
             <div className="flex flex-col items-center gap-4">
               <div className="flex flex-wrap gap-2 justify-center">
                 <Pill>Upfront savings</Pill>
@@ -234,8 +234,8 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Stat cards pinned to bottom */}
-          <div className="absolute bottom-0 left-0 right-0 px-6 pb-12">
+          {/* Stat cards — absolute on sm+, normal flow on mobile */}
+          <div className="hidden sm:block absolute bottom-0 left-0 right-0 px-6 pb-12">
             <div className="mx-auto max-w-6xl grid sm:grid-cols-3 gap-4">
               <StatCard
                 label="Est. savings / year"
@@ -254,6 +254,25 @@ export default function Page() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Stat cards — below hero on mobile */}
+        <div className="sm:hidden px-4 py-6 flex flex-col gap-4">
+          <StatCard
+            label="Est. savings / year"
+            value="₹25,000+"
+            sub="avg. for daily commuters"
+          />
+          <StatCard
+            label="Cost per km"
+            value="₹0.15"
+            sub="vs ₹2.80 for petrol"
+          />
+          <StatCard
+            label="Range per charge"
+            value="151 km"
+            sub="Ola S1 Pro certified range"
+          />
         </div>
         <div className="h-12" />
       </section>
