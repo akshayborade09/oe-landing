@@ -2,7 +2,12 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0a0a0a;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -10,17 +15,105 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Green palette — 90 (dark) to 10 (light) */
+  --color-green-90: #0D6630;
+  --color-green-80: #0F7638;
+  --color-green-70: #118840;
+  --color-green-60: #139848;
+  --color-green-50: #16AA51;
+  --color-green-40: #A1DDB9;
+  --color-green-30: #B9E5CB;
+  --color-green-20: #D0EEDC;
+  --color-green-10: #E6F1EA;
+
+  /* Blue palette — 90 (dark) to 10 (light) */
+  --color-blue-90: #113D84;
+  --color-blue-80: #14479A;
+  --color-blue-70: #1752B0;
+  --color-blue-60: #1A5CC6;
+  --color-blue-50: #1D67DD;
+  --color-blue-40: #A4C5F2;
+  --color-blue-30: #BBD1F4;
+  --color-blue-20: #D1E0F8;
+  --color-blue-10: #E8F0FB;
+
+  /* Gentona font family */
+  --font-gentona: var(--font-gentona), var(--font-sans);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+/* Hero text responsive sizing */
+.hero-heading {
+  font-size: 42px;
+  line-height: 46px;
+}
+
+@media (min-width: 640px) {
+  .hero-heading {
+    font-size: 52px;
+    line-height: 56px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-heading {
+    font-size: 60px;
+    line-height: 64px;
+  }
+}
+
+/* Section heading responsive */
+.section-heading {
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+@media (min-width: 640px) {
+  .section-heading {
+    font-size: 44px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-heading {
+    font-size: 52px;
+  }
+}
+
+/* Section label (small eyebrow above heading) */
+.section-label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #71717a;
 }
