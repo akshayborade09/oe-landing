@@ -210,8 +210,7 @@ export default function Page() {
   const heroSlides = [
     {
       pills: ['Upfront savings', 'More distance per rupee', 'Lower running cost'],
-      headingDark: 'Switch to electric.',
-      headingLight: 'Save every ride.',
+      headingDark: 'Switch to electric. Save every ride.',
       description: 'Minimal maintenance. More distance per rupee. Save up to ₹25,000 every year on fuel alone.',
       primaryCta: 'Calculate savings',
       secondaryCta: 'Compare costs',
@@ -220,8 +219,7 @@ export default function Page() {
     },
     {
       pills: ['151 km range', 'True range tested', 'Go further'],
-      headingDark: 'Go the distance.',
-      headingLight: 'Every single day.',
+      headingDark: 'Go the distance. Every single day.',
       description: 'Up to 151 km on a single charge. Built for your daily commute and beyond — rain or shine.',
       primaryCta: 'Compare Range',
       secondaryCta: 'View models',
@@ -230,8 +228,7 @@ export default function Page() {
     },
     {
       pills: ['500+ service points', '1-day delivery', 'Hyper convenient'],
-      headingDark: 'Service reimagined.',
-      headingLight: 'Hyper convenient.',
+      headingDark: 'Service reimagined. Hyper convenient.',
       description: 'Doorstep service, 500+ touchpoints, and next-day delivery. Ownership made effortless.',
       primaryCta: 'Explore service',
       secondaryCta: 'Find a center',
@@ -628,7 +625,7 @@ export default function Page() {
               </div>
               <button
                 onClick={() => scrollTo('savings')}
-                className="focus-ring shrink-0 inline-flex items-center justify-center h-12 px-6 rounded-[var(--radius-button)] bg-white text-[var(--color-text-primary)] text-[14px] font-semibold hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
+                className="focus-ring shrink-0 inline-flex items-center justify-center h-12 px-6 rounded-[var(--radius-button)] bg-white text-[var(--color-text-primary)] text-lg font-semibold hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
               >
                 Book a test ride
               </button>
