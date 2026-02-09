@@ -1,13 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  transpilePackages: ['@tamagui/lucide-icons'],
-  turbopack: {
-    resolveAlias: {
-      'react-native': 'react-native-web',
-      'react-native-svg': '@tamagui/react-native-svg',
-    },
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

@@ -1,20 +1,21 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-}
-
-.dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
+/* ── Design Tokens ──────────────────────────────────────── */
+@theme {
+  /* Font — must not be inline so --font-sans is emitted as a CSS variable */
+  --font-sans: var(--font-gentona), "Gentona", system-ui, -apple-system, sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colors */
+  --color-background: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-text-primary: #111111;
+  --color-text-muted: #6B7280;
+  --color-accent-green: #16A34A;
+  --color-accent-green-tint: #E9F7EE;
+  --color-cta-black: #111111;
 
   /* Green palette — 90 (dark) to 10 (light) */
   --color-green-90: #0D6630;
@@ -27,7 +28,7 @@
   --color-green-20: #D0EEDC;
   --color-green-10: #E6F1EA;
 
-  /* Blue palette — 90 (dark) to 10 (light) */
+  /* Blue palette */
   --color-blue-90: #113D84;
   --color-blue-80: #14479A;
   --color-blue-70: #1752B0;
@@ -38,17 +39,26 @@
   --color-blue-20: #D1E0F8;
   --color-blue-10: #E8F0FB;
 
-  /* Gentona font family */
-  --font-gentona: var(--font-gentona), var(--font-sans);
+  /* Radii */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-pill: 9999px;
 }
 
+/* ── Base ───────────────────────────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-gentona, "Gentona"), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* ── Custom Scrollbar ─────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -62,53 +72,102 @@ body {
   border-radius: 3px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #404040;
-}
-
-/* Hero text responsive sizing */
+/* ── Hero Heading — Responsive ────────────────────────── */
 .hero-heading {
-  font-size: 42px;
-  line-height: 46px;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 @media (min-width: 640px) {
   .hero-heading {
-    font-size: 52px;
-    line-height: 56px;
+    font-size: 48px;
   }
 }
 
 @media (min-width: 1024px) {
   .hero-heading {
-    font-size: 60px;
-    line-height: 64px;
+    font-size: 56px;
   }
 }
 
-/* Section heading responsive */
+/* ── Section Heading — Responsive ─────────────────────── */
 .section-heading {
-  font-size: 34px;
+  font-size: 28px;
   line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
 }
 
 @media (min-width: 640px) {
+  .section-heading {
+    font-size: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
   .section-heading {
     font-size: 44px;
   }
 }
 
-@media (min-width: 1024px) {
-  .section-heading {
-    font-size: 52px;
-  }
-}
-
-/* Section label (small eyebrow above heading) */
+/* ── Section Label (eyebrow) ──────────────────────────── */
 .section-label {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #71717a;
+  color: var(--color-text-muted);
+}
+
+/* ── Slider thumb override ────────────────────────────── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: #E5E7EB;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-green);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.35);
+  box-shadow: 0 2px 8px rgba(22,163,74,0.35);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-green);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.35);
+  box-shadow: 0 2px 8px rgba(22,163,74,0.35);
+}
+
+/* ── Focus ring utility ───────────────────────────────── */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-accent-green);
+  outline-offset: 2px;
 }
