@@ -142,7 +142,7 @@ function PrimaryButton({
   return (
     <button
       onClick={onClick}
-      className={`focus-ring inline-flex items-center justify-center gap-2 h-12 pl-2 pr-6 rounded-[var(--radius-button)] bg-[var(--color-cta-black)] text-white text-lg font-semibold hover:bg-[#1F1F1F] active:bg-black transition-colors duration-150 ${className}`}
+      className={`focus-ring inline-flex items-center justify-center gap-2 h-12 px-6 rounded-[var(--radius-button)] bg-[var(--color-cta-black)] text-white text-lg font-semibold hover:bg-[#1F1F1F] active:bg-black transition-colors duration-150 ${className}`}
     >
       {children}
     </button>
@@ -277,7 +277,7 @@ export default function Page() {
       {/* ── Floating CTA ── */}
       <PrimaryButton
         onClick={() => scrollTo('cta')}
-        className="!fixed bottom-5 right-5 z-[60] shadow-lg hover:scale-110 transition-transform duration-150"
+        className="!fixed bottom-8 right-8 z-[60] shadow-lg hover:scale-110 transition-transform duration-150 !text-xl !font-regular !pl-2 !pr-8 !gap-1 !rounded-sm !bg-[var(--color-accent-green)] hover:!bg-[#15803d] active:!bg-[#166534]"
       >
         <span className="w-[60px] h-[60px] flex items-center justify-center">
           <Lottie animationData={scooterAnimation} loop autoplay style={{ width: 60, height: 60 }} />
