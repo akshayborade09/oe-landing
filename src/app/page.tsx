@@ -338,7 +338,6 @@ export default function Page() {
                   className="hero-heading text-center"
                 >
                   <span className="text-[var(--color-text-primary)]">{heroSlides[heroSlide].headingDark} </span>
-                  <span className="text-[var(--color-text-muted)]">{heroSlides[heroSlide].headingLight}</span>
                 </motion.h1>
 
                 {/* Description */}
