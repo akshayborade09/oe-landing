@@ -51,6 +51,9 @@
 
 /* ── Base ───────────────────────────────────────────────── */
 body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   background: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-gentona, "Gentona"), system-ui, -apple-system, sans-serif;
@@ -58,18 +61,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Custom Scrollbar ─────────────────────────────────── */
+/* ── Hide Scrollbar ───────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
-  border-radius: 3px;
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* ── Hero Heading — Responsive ────────────────────────── */

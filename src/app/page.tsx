@@ -1,9 +1,13 @@
 'use client'
 
-import { useMemo, useState, useCallback, useEffect } from 'react'
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Lottie from 'lottie-react'
 import scooterAnimation from '../../public/assets/scooter-lottie.json'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // ── Helpers ─────────────────────────────────────────────
 function formatINR(n: number) {
@@ -142,7 +146,7 @@ function PrimaryButton({
   return (
     <button
       onClick={onClick}
-      className={`focus-ring inline-flex items-center justify-center gap-2 h-12 px-6 rounded-[var(--radius-button)] bg-[var(--color-cta-black)] text-white text-lg font-semibold hover:bg-[#1F1F1F] active:bg-black transition-colors duration-150 ${className}`}
+      className={`focus-ring inline-flex items-center justify-center gap-2 h-12 px-6 rounded-sm bg-[var(--color-cta-black)] text-white text-lg font-semibold hover:bg-[#1F1F1F] active:bg-black transition-colors duration-150 ${className}`}
     >
       {children}
     </button>
@@ -162,7 +166,7 @@ function SecondaryButton({
   return (
     <button
       onClick={onClick}
-      className={`focus-ring inline-flex items-center justify-center gap-2 h-12 px-6 rounded-[var(--radius-button)] bg-white text-[var(--color-text-primary)] text-lg font-semibold border border-[var(--color-border)] hover:bg-[#F9FAFB] active:bg-[#F3F4F6] transition-colors duration-150 ${className}`}
+      className={`focus-ring inline-flex items-center justify-center gap-2 h-12 px-6 rounded-sm bg-white text-[var(--color-text-primary)] text-lg font-semibold border border-[var(--color-border)] hover:bg-[#F9FAFB] active:bg-[#F3F4F6] transition-colors duration-150 ${className}`}
     >
       {children}
     </button>
@@ -185,7 +189,7 @@ function IconButton({
     <button
       onClick={onClick}
       aria-label={label}
-      className={`focus-ring inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#F3F4F6] hover:bg-[#E5E7EB] active:bg-[#D1D5DB] transition-colors duration-150 ${className}`}
+      className={`focus-ring inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#F3F4F6] hover:bg-[#E5E7EB] active:bg-[#D1D5DB] hover:scale-110 transition-all duration-150 ${className}`}
     >
       {children}
     </button>
@@ -218,6 +222,8 @@ export default function Page() {
       secondaryCta: 'Compare costs',
       primaryLink: 'savings',
       secondaryLink: 'range',
+      image: '/assets/savings.png',
+      darkText: false,
     },
     {
       pills: ['151 km range', 'True range tested', 'Go further'],
@@ -227,6 +233,8 @@ export default function Page() {
       secondaryCta: 'View models',
       primaryLink: 'range',
       secondaryLink: 'cta',
+      image: '/assets/range.png',
+      darkText: true,
     },
     {
       pills: ['500+ service points', '1-day delivery', 'Hyper convenient'],
@@ -236,6 +244,8 @@ export default function Page() {
       secondaryCta: 'Find a center',
       primaryLink: 'service',
       secondaryLink: 'cta',
+      image: '/assets/hyperservice.png',
+      darkText: true,
     },
   ]
 
@@ -271,13 +281,68 @@ export default function Page() {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  // ── GSAP Scroll Animations ──
+  const mainRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate each section on scroll
+      gsap.utils.toArray<HTMLElement>('.gsap-section').forEach((section) => {
+        gsap.from(section, {
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            end: 'top 50%',
+            toggleActions: 'play none none reverse',
+          },
+          y: 60,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        })
+      })
+
+      // Animate cards staggered
+      gsap.utils.toArray<HTMLElement>('.gsap-stagger').forEach((container) => {
+        const children = container.children
+        gsap.from(children, {
+          scrollTrigger: {
+            trigger: container,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+          y: 40,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power3.out',
+        })
+      })
+
+      // Stat cards in hero — subtle slide up
+      gsap.from('.gsap-stat-cards', {
+        scrollTrigger: {
+          trigger: '.gsap-stat-cards',
+          start: 'top 90%',
+          toggleActions: 'play none none reverse',
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power2.out',
+      })
+    }, mainRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
+    <div ref={mainRef} className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
 
       {/* ── Floating CTA ── */}
       <PrimaryButton
         onClick={() => scrollTo('cta')}
-        className="!fixed bottom-8 right-8 z-[60] shadow-lg hover:scale-110 transition-transform duration-150 !text-xl !font-regular !pl-2 !pr-8 !gap-1 !rounded-sm !bg-[var(--color-accent-green)] hover:!bg-[#15803d] active:!bg-[#166534]"
+        className="!fixed bottom-8 right-8 z-[60] shadow-lg hover:scale-110 transition-transform duration-150 !text-xl !font-regular !pl-2 !pr-8 !gap-1 !rounded-sm !bg-black !text-white hover:!bg-[#1a1a1a] active:!bg-[#333]"
       >
         <span className="w-[60px] h-[60px] flex items-center justify-center">
           <Lottie animationData={scooterAnimation} loop autoplay style={{ width: 60, height: 60 }} />
@@ -288,7 +353,7 @@ export default function Page() {
       {/* ══════════════════════════════════════════════════════
           NAVBAR
           ══════════════════════════════════════════════════════ */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[var(--color-border)]">
+      <nav className="sticky top-0 z-50 bg-white/40 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/20">
         <div className="mx-auto max-w-6xl px-4 h-20 flex items-center justify-between">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/dark_black_logo.svg" alt="Ola Electric" width={60} height={24} />
@@ -297,7 +362,7 @@ export default function Page() {
               <button
                 key={item}
                 onClick={() => scrollTo(item === 'Hyper Service' ? 'service' : item.toLowerCase())}
-                className="focus-ring hidden sm:inline-flex px-3 py-2 rounded-[var(--radius-button)] text-lg font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[#F3F4F6] transition-colors duration-150"
+                className="focus-ring hidden sm:inline-flex px-3 py-2 rounded-sm text-lg font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[#F3F4F6] transition-colors duration-150"
               >
                 {item}
               </button>
@@ -313,7 +378,26 @@ export default function Page() {
           HERO CAROUSEL
           ══════════════════════════════════════════════════════ */}
       <section>
-        <div className="relative w-full min-h-[90vh] bg-[#F8F8F8] overflow-hidden">
+        <div className="relative w-full min-h-[90vh] overflow-hidden">
+
+          {/* Background image with blur crossfade */}
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={`bg-${heroSlide}`}
+              initial={{ opacity: 0, filter: 'blur(20px)', scale: 1.05 }}
+              animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
+              exit={{ opacity: 0, filter: 'blur(20px)' }}
+              transition={{ duration: 1, ease: 'easeInOut' }}
+              className="absolute inset-0 z-0"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={heroSlides[heroSlide].image}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          </AnimatePresence>
 
           {/* Slide content */}
           <AnimatePresence mode="wait">
@@ -322,52 +406,62 @@ export default function Page() {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="relative mx-auto max-w-6xl px-6 min-h-[90vh] flex flex-col items-center justify-center sm:pb-48"
+              className="relative z-10 mx-auto max-w-6xl px-6 min-h-[90vh] flex flex-col items-center justify-center sm:pb-48 -mt-[15vh]"
             >
-              <div className="flex flex-col items-center gap-6">
-                {/* Pills */}
-                <motion.div
-                  variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
-                  transition={{ duration: 0.4, ease: 'easeOut', delay: 0 }}
-                  className="flex flex-wrap gap-2 justify-center"
-                >
-                  {heroSlides[heroSlide].pills.map((p) => (
-                    <Pill key={p}>{p}</Pill>
-                  ))}
-                </motion.div>
+              {(() => {
+                const dark = heroSlides[heroSlide].darkText
+                return (
+                  <div className="flex flex-col items-center gap-6">
+                    {/* Pills */}
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0 }}
+                      className="flex flex-wrap gap-2 justify-center"
+                    >
+                      {heroSlides[heroSlide].pills.map((p) => (
+                        <span
+                          key={p}
+                          className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] border border-[var(--color-border)] bg-white backdrop-blur-sm px-3 py-1.5 text-md font-medium text-[var(--color-text-primary)]"
+                        >
+                          {p}
+                        </span>
+                      ))}
+                    </motion.div>
 
-                {/* Heading */}
-                <motion.h1
-                  variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
-                  transition={{ duration: 0.4, ease: 'easeOut', delay: 0.08 }}
-                  className="hero-heading text-center"
-                >
-                  <span className="text-[var(--color-text-primary)]">{heroSlides[heroSlide].headingDark} </span>
-                </motion.h1>
+                    {/* Heading */}
+                    <motion.h1
+                      variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.08 }}
+                      className={`hero-heading text-center ${dark ? 'text-[var(--color-text-primary)]' : 'text-white'}`}
+                    >
+                      <span>{heroSlides[heroSlide].headingDark}</span>
+                    </motion.h1>
 
-                {/* Description */}
-                <motion.p
-                  variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
-                  transition={{ duration: 0.4, ease: 'easeOut', delay: 0.16 }}
-                  className="text-lg text-[var(--color-text-muted)] text-center max-w-lg leading-relaxed"
-                >
-                  {heroSlides[heroSlide].description}
-                </motion.p>
+                    {/* Description */}
+                    <motion.p
+                      variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.16 }}
+                      className={`text-lg text-center max-w-lg leading-relaxed ${dark ? 'text-[var(--color-text-primary)]' : 'text-white/80'}`}
+                    >
+                      {heroSlides[heroSlide].description}
+                    </motion.p>
 
-                {/* CTAs */}
-                <motion.div
-                  variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
-                  transition={{ duration: 0.4, ease: 'easeOut', delay: 0.24 }}
-                  className="flex flex-wrap gap-3 justify-center"
-                >
-                  <PrimaryButton onClick={() => scrollTo(heroSlides[heroSlide].primaryLink)}>
-                    {heroSlides[heroSlide].primaryCta}
-                  </PrimaryButton>
-                  <SecondaryButton onClick={() => scrollTo(heroSlides[heroSlide].secondaryLink)}>
-                    {heroSlides[heroSlide].secondaryCta}
-                  </SecondaryButton>
-                </motion.div>
-              </div>
+                    {/* CTAs */}
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 16 } }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.24 }}
+                      className="flex flex-wrap gap-3 justify-center"
+                    >
+                      <PrimaryButton onClick={() => scrollTo(heroSlides[heroSlide].primaryLink)}>
+                        {heroSlides[heroSlide].primaryCta}
+                      </PrimaryButton>
+                      <SecondaryButton onClick={() => scrollTo(heroSlides[heroSlide].secondaryLink)}>
+                        {heroSlides[heroSlide].secondaryCta}
+                      </SecondaryButton>
+                    </motion.div>
+                  </div>
+                )
+              })()}
             </motion.div>
           </AnimatePresence>
 
@@ -377,16 +471,16 @@ export default function Page() {
               <button
                 key={i}
                 onClick={() => setHeroSlide(i)}
-                className="focus-ring relative h-1.5 w-10 rounded-full bg-[#D1D5DB]/50 overflow-hidden"
+                className="focus-ring relative h-1.5 w-10 rounded-full bg-white/30 overflow-hidden"
                 aria-label={`Go to slide ${i + 1}`}
               >
                 {i < heroSlide && (
-                  <span className="absolute inset-0 rounded-full bg-[var(--color-text-primary)]" />
+                  <span className="absolute inset-0 rounded-full bg-white" />
                 )}
                 {i === heroSlide && (
                   <motion.span
                     key={`progress-${heroSlide}`}
-                    className="absolute inset-y-0 left-0 rounded-full bg-[var(--color-text-primary)]"
+                    className="absolute inset-y-0 left-0 rounded-full bg-white"
                     initial={{ width: '0%' }}
                     animate={{ width: '100%' }}
                     transition={{ duration: 8, ease: 'linear' }}
@@ -421,7 +515,7 @@ export default function Page() {
         </div>
 
         {/* Stat cards — below hero on mobile */}
-        <div className="sm:hidden px-4 py-5 flex flex-col gap-3">
+        <div className="sm:hidden px-4 py-5 flex flex-col gap-3 gsap-stat-cards">
           <StatCard label="Est. savings / year" value="₹25,000+" sub="avg. for daily commuters" />
           <StatCard label="Cost per km" value="₹0.15" sub="vs ₹2.80 for petrol" />
           <StatCard label="Range per charge" value="151 km" sub="Ola S1 Pro certified range" />
@@ -431,7 +525,7 @@ export default function Page() {
       {/* ══════════════════════════════════════════════════════
           SAVINGS
           ══════════════════════════════════════════════════════ */}
-      <section id="savings">
+      <section id="savings" className="gsap-section">
         <div className="mx-auto max-w-6xl px-4 pt-10 sm:pt-10 pb-8 sm:pb-10">
           {/* Section header */}
           <div className="mb-8 sm:mb-10">
@@ -499,7 +593,7 @@ export default function Page() {
                 {/* Estimated savings */}
                 <div className="rounded-[var(--radius-card)] bg-[var(--color-accent-green-tint)] p-4 sm:p-5">
                   <div className="text-md font-medium text-[var(--color-accent-green)]">Your estimated savings</div>
-                  <div className="mt-2 text-4xl font-semibold text-[var(--color-text-primary)]">₹{formatINR(yearlySavings)} / year</div>
+                  <div className="mt-2 text-5xl font-semibold italic text-[var(--color-text-primary)]">₹{formatINR(yearlySavings)}/year</div>
                   <div className="mt-1 text-md text-[var(--color-text-muted)]">
                     Based on ₹{PETROL_COST_PER_KM}/km petrol and ₹{EV_COST_PER_KM}/km electric assumptions.
                   </div>
@@ -520,7 +614,7 @@ export default function Page() {
       {/* ══════════════════════════════════════════════════════
           RANGE
           ══════════════════════════════════════════════════════ */}
-      <section id="range">
+      <section id="range" className="gsap-section">
         <div className="mx-auto max-w-6xl px-4 pt-8 sm:pt-10 pb-8 sm:pb-10">
           {/* Section header */}
           <div className="mb-8 sm:mb-10">
@@ -552,12 +646,12 @@ export default function Page() {
             <div className="mt-6 grid sm:grid-cols-2 gap-3">
               <div className="rounded-[var(--radius-card)] bg-zinc-100 p-5 sm:p-6">
                 <div className="text-md font-medium text-[var(--color-text-muted)]">Petrol 2 Wheeler</div>
-                <div className="mt-2 text-4xl sm:text-4xl font-semibold text-[var(--color-text-primary)]">{Math.round(petrolKm)} km</div>
+                <div className="mt-2 text-5xl sm:text-4xl font-semibold italic text-[var(--color-text-primary)]">{Math.round(petrolKm)} km</div>
                 <div className="mt-2 text-lg text-[var(--color-text-primary)]">≈ {PETROL_KM_PER_100} km per ₹100</div>
               </div>
               <div className="rounded-[var(--radius-card)] bg-zinc-100 p-5 sm:p-6">
                 <div className="text-md font-medium text-[var(--color-text-muted)]">Electric 2 Wheeler</div>
-                <div className="mt-2 text-2xl sm:text-[32px] font-semibold text-[var(--color-accent-green)]">{Math.round(evKm)} km</div>
+                <div className="mt-2 text-5xl sm:text-4xl font-semibold italic text-[var(--color-accent-green)]">{Math.round(evKm)} km</div>
                 <div className="mt-2 text-lg text-[var(--color-text-primary)]">≈ {UNITS_PER_100} units per ₹100 → {EV_KM_PER_UNIT} km/unit</div>
               </div>
             </div>
@@ -588,7 +682,7 @@ export default function Page() {
       {/* ══════════════════════════════════════════════════════
           HYPER SERVICE
           ══════════════════════════════════════════════════════ */}
-      <section id="service">
+      <section id="service" className="gsap-section">
         <div className="mx-auto max-w-6xl px-4 pt-8 sm:pt-10 pb-8 sm:pb-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -600,7 +694,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 gsap-stagger">
             <BentoItem tag="Network" title="Wider Service Network" desc="Servicing your Ola is now easier and closer than ever." image="/assets/wider-service.png" />
             <BentoItem tag="Parts" title="Convenience" desc="Just a click away. Order Ola parts online on app and website." image="/assets/comvenience.png" />
             <BentoItem tag="MRP" title="Transparency you can trust" desc="Genuine Ola parts at verified MRP." image="/assets/transparaency.png" />
@@ -614,7 +708,7 @@ export default function Page() {
       {/* ══════════════════════════════════════════════════════
           CTA
           ══════════════════════════════════════════════════════ */}
-      <section id="cta">
+      <section id="cta" className="gsap-section">
         <div className="mx-auto max-w-6xl px-4 pb-10 sm:pb-12">
           <div className="rounded-[var(--radius-card)] bg-[var(--color-cta-black)] text-white overflow-hidden p-6 sm:p-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
