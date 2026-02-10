@@ -668,7 +668,7 @@ export default function Page() {
               </div>
               <div className="mt-2 flex justify-between text-md text-[var(--color-text-muted)]">
                 <span>Petrol 2-wheeler</span>
-                <span className="font-medium text-[var(--color-accent-green)]">Ola Electric ({xMore}× farther)</span>
+                <span className="font-medium text-[var(--color-accent-green)]">Ola Electric({xMore}× farther)</span>
               </div>
             </div>
 
